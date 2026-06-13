@@ -36,7 +36,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/one_last_tri/",
+              "baseHref": "/oneLastTri/",
               "budgets": [
                 {
                   "type": "initial",
