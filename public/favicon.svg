@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 56">
+  <!--
+    21 equilateral triangles at scale S=14, H=12.
+    Board geometry matches the game board (hexagon with upper-right corner removed).
+    Row offsets (x start):  row 0 & 3 → 11,  row 1 & 2 → 4
+    y origin = 4  (4px top padding)
+
+    ▲ = upward (bright gold)   ▽ = downward (amber)
+  -->
+  <rect width="64" height="56" fill="#090b18"/>
+
+  <!-- Row 0: ▲ ▽ ▲ ▽ ▲ -->
+  <polygon points="18,4  11,16 25,16" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="18,4  32,4  25,16" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="32,4  25,16 39,16" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="32,4  46,4  39,16" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="46,4  39,16 53,16" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+
+  <!-- Row 1: ▲ ▽ ▲ ▽ ▲ ▽ ▲ -->
+  <polygon points="11,16  4,28 18,28" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="11,16 25,16 18,28" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="25,16 18,28 32,28" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="25,16 39,16 32,28" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="39,16 32,28 46,28" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="39,16 53,16 46,28" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="53,16 46,28 60,28" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+
+  <!-- Row 2: ▽ ▲ ▽ ▲  (upper-right missing = the removed chunk) -->
+  <polygon points=" 4,28 18,28 11,40" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="18,28 11,40 25,40" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="18,28 32,28 25,40" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="32,28 25,40 39,40" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+
+  <!-- Row 3: ▽ ▲ ▽ ▲ ▽ -->
+  <polygon points="11,40 25,40 18,52" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="25,40 18,52 32,52" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="25,40 39,40 32,52" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="39,40 32,52 46,52" fill="#ffd700" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+  <polygon points="39,40 53,40 46,52" fill="#c89400" stroke="#090b18" stroke-width="0.7" stroke-linejoin="round"/>
+</svg>

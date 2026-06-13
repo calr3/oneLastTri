@@ -1,0 +1,150 @@
+<div class="game">
+
+  <header>
+    <h1>One Last Tri</h1>
+    <p class="status">{{ status() }}</p>
+  </header>
+
+  <div class="play-area">
+
+    <!-- ── Black player ── -->
+    <aside class="player-panel"
+           [class.active]="currentPlayer() === 'black' && phase() === 'playing'">
+      <div class="player-header">
+        <span class="dot black-dot"></span>
+        <span class="player-name">Black</span>
+        @if (phase() === 'finished') {
+          <span class="final-score">{{ blackScore() }}</span>
+        }
+      </div>
+      <div class="hand">
+        @for (tile of blackHand(); track tile) {
+          <button class="tile black-tile"
+                  [class.selected]="selectedTile() === tile && currentPlayer() === 'black'"
+                  [disabled]="currentPlayer() !== 'black' || phase() !== 'playing'"
+                  (click)="clickTile(tile, 'black')">
+            <svg viewBox="0 0 52 46" width="46" height="41" aria-hidden="true">
+              <polygon points="26,2 2,44 50,44" />
+              <text x="26" y="33" text-anchor="middle" dominant-baseline="central">{{ tile }}</text>
+            </svg>
+          </button>
+        }
+      </div>
+    </aside>
+
+    <!-- ── Board ── -->
+    <div class="board-wrap">
+      <svg class="board" [attr.viewBox]="viewBox" role="img" aria-label="Game board">
+        @for (cell of cells(); track cell.id) {
+          <g class="cell"
+             [class.empty]="cell.owner === null && phase() === 'playing' && selectedTile() === null"
+             [class.placeable]="cell.owner === null && selectedTile() !== null && phase() === 'playing'"
+             [class.is-black]="cell.owner === 'black'"
+             [class.is-white]="cell.owner === 'white'"
+             [class.void]="phase() === 'finished' && cell.owner === null"
+             [class.scoring]="adjToEmpty().has(cell.id)"
+             (click)="clickCell(cell)">
+            <polygon [attr.points]="cell.points" />
+            @if (cell.value !== null) {
+              <text [attr.x]="cell.cx" [attr.y]="cell.cy"
+                    text-anchor="middle" dominant-baseline="central"
+                    [class.dark-label]="cell.owner === 'white'">{{ cell.value }}</text>
+            }
+            @if (showAnnotations() && cell.owner === null) {
+              <text [attr.x]="cell.cx" [attr.y]="cell.cy"
+                    text-anchor="middle" dominant-baseline="central"
+                    class="annotation-label">{{ cellLetters[cell.id] }}</text>
+            }
+          </g>
+        }
+      </svg>
+    </div>
+
+    <!-- ── White player ── -->
+    <aside class="player-panel"
+           [class.active]="currentPlayer() === 'white' && phase() === 'playing'">
+      <div class="player-header">
+        <span class="player-name">White</span>
+        <span class="dot white-dot"></span>
+        @if (phase() === 'finished') {
+          <span class="final-score">{{ whiteScore() }}</span>
+        }
+      </div>
+      <div class="hand">
+        @for (tile of whiteHand(); track tile) {
+          <button class="tile white-tile"
+                  [class.selected]="selectedTile() === tile && currentPlayer() === 'white'"
+                  [disabled]="currentPlayer() !== 'white' || phase() !== 'playing'"
+                  (click)="clickTile(tile, 'white')">
+            <svg viewBox="0 0 52 46" width="46" height="41" aria-hidden="true">
+              <polygon points="26,2 2,44 50,44" />
+              <text x="26" y="33" text-anchor="middle" dominant-baseline="central">{{ tile }}</text>
+            </svg>
+          </button>
+        }
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ── Game-over result ── -->
+  @if (phase() === 'finished') {
+    <div class="result">
+      @if (winner() === 'tie') {
+        <span class="result-verdict">Tie Game</span>
+      } @else {
+        <span class="result-verdict">{{ winner() === 'black' ? 'Black' : 'White' }} Wins</span>
+      }
+      <span class="result-scores">
+        Black&nbsp;<strong>{{ blackScore() }}</strong>
+        &nbsp;—&nbsp;
+        <strong>{{ whiteScore() }}</strong>&nbsp;White
+      </span>
+      <button class="btn-new" (click)="newGame()">New Game</button>
+    </div>
+  }
+
+  <div class="bottom-actions">
+    <button class="btn-action" (click)="saveGame()" [disabled]="moveHistory().length === 0">Game record</button>
+    <button class="btn-action" (click)="openRules()">Rules</button>
+    <button class="btn-action" [class.active]="showAnnotations()" (click)="toggleAnnotations()">Labels</button>
+  </div>
+
+  @if (showRules()) {
+    <div class="notation-backdrop" (click)="closeRules()">
+      <div class="notation-popup" (click)="$event.stopPropagation()">
+        <div class="notation-header">
+          <span class="notation-title">Rules</span>
+          <button class="notation-close" (click)="closeRules()">✕</button>
+        </div>
+        <ul class="rules-list">
+          <li>Each player starts with a hand of 10 triangular tiles, numbered 1 to 10. One player has black tiles, the other has white tiles.</li>
+          <li>Players take it in turns, starting with black.</li>
+          <li>On each turn, the player selects one tile from their hand and places it on the board in any empty triangle.</li>
+          <li>Once both players have emptied their hand, there will be a single empty triangle left on the board. Black's score is the sum of the black tiles adjacent to that empty triangle, and likewise for white. The winner is whoever has the highest score, or a tie is declared if the scores are equal.</li>
+        </ul>
+      </div>
+    </div>
+  }
+
+  @if (showNotation()) {
+    <div class="notation-backdrop" (click)="closeNotation()">
+      <div class="notation-popup" (click)="$event.stopPropagation()">
+        <div class="notation-header">
+          <span class="notation-title">Game Record</span>
+          <button class="notation-close" (click)="closeNotation()">✕</button>
+        </div>
+        <pre class="notation-text">{{ gameNotation() }}</pre>
+        <div class="notation-footer">
+          <button class="btn-copy" (click)="copyNotation()">Copy to clipboard</button>
+          @if (copyOk() === true) {
+            <span class="notation-copied ok">Copied</span>
+          } @else if (copyOk() === false) {
+            <span class="notation-copied">Could not copy</span>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

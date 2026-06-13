@@ -1,0 +1,497 @@
+// ─── Layout ───────────────────────────────────────────────────────────────────
+
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: #090b18;
+  color: #c8d0e8;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 40px;
+  gap: 22px;
+
+  @media (max-width: 680px) {
+    align-items: stretch;
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────────────────────────
+
+header {
+  text-align: center;
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 1.45rem;
+    font-weight: 300;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #ffd700;
+  }
+
+  .status {
+    margin: 0;
+    min-height: 1.4em;
+    font-size: 0.88rem;
+    letter-spacing: 0.03em;
+    color: #606898;
+  }
+}
+
+// ─── Play area ────────────────────────────────────────────────────────────────
+
+.play-area {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+
+  @media (max-width: 680px) {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+// ─── Player panels ────────────────────────────────────────────────────────────
+
+.player-panel {
+  width: 118px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 6px;
+
+  &.active .player-name {
+    color: #ffd700;
+  }
+
+  @media (max-width: 680px) {
+    width: 100%;
+    max-width: 400px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0 0;
+    border-top: 1px solid #1e2042;
+  }
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 2px;
+
+  @media (max-width: 680px) {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+}
+
+.player-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #464870;
+  transition: color 0.25s;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &.black-dot {
+    background: #7055c8;
+    box-shadow: 0 0 5px #7055c8;
+  }
+
+  &.white-dot {
+    background: #d8d8f4;
+    box-shadow: 0 0 5px #d8d8f4;
+  }
+}
+
+.final-score {
+  margin-left: auto;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffd700;
+  line-height: 1;
+}
+
+// ─── Hand tiles ───────────────────────────────────────────────────────────────
+
+.hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  @media (max-width: 680px) {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+  }
+}
+
+.tile {
+  all: unset;
+  display: block;
+  border-radius: 3px;
+  padding: 1px;
+  transition: transform 0.12s, filter 0.12s;
+
+  &:not([disabled]):hover {
+    transform: translateY(-3px);
+  }
+
+  &[disabled] {
+    opacity: 0.28;
+    pointer-events: none;
+  }
+
+  svg {
+    display: block;
+
+    polygon {
+      transition: fill 0.15s, stroke 0.15s;
+    }
+
+    text {
+      font-size: 15px;
+      font-weight: 700;
+    }
+  }
+
+  &.black-tile {
+    cursor: pointer;
+
+    svg polygon {
+      fill: #0e0818;
+      stroke: #4a38a0;
+      stroke-width: 1.5;
+    }
+
+    svg text { fill: #c0b0ff; }
+  }
+
+  &.white-tile {
+    cursor: pointer;
+
+    svg polygon {
+      fill: #ededf8;
+      stroke: #8080c0;
+      stroke-width: 1.5;
+    }
+
+    svg text { fill: #1a1a38; }
+  }
+
+  &.selected {
+    transform: translateY(-3px);
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+
+    &.black-tile svg polygon {
+      fill: #160e38;
+      stroke: #ffd700;
+      stroke-width: 2.5;
+    }
+
+    &.white-tile svg polygon {
+      fill: #fffae0;
+      stroke: #ffd700;
+      stroke-width: 2.5;
+    }
+  }
+}
+
+// ─── Board SVG ────────────────────────────────────────────────────────────────
+
+.board-wrap {
+  flex-shrink: 0;
+
+  @media (max-width: 680px) {
+    width: 100%;
+  }
+}
+
+.board {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.cell {
+  polygon {
+    stroke: #22244e;
+    stroke-width: 1.5;
+    transition: fill 0.15s, stroke 0.15s;
+  }
+
+  text {
+    font-family: system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    fill: #b8a8f8;
+    pointer-events: none;
+    user-select: none;
+
+    &.dark-label { fill: #1a1838; }
+    &.annotation-label {
+      font-size: 15px;
+      font-weight: 400;
+      fill: #505880;
+    }
+  }
+
+  &.empty polygon { fill: #161830; }
+
+  &.placeable {
+    cursor: pointer;
+
+    polygon {
+      fill: #1c2048;
+      stroke: #363870;
+    }
+
+    &:hover polygon {
+      fill: #252a60;
+      stroke: #484e98;
+    }
+  }
+
+  &.is-black polygon {
+    fill: #0d0820;
+    stroke: #352e7a;
+  }
+
+  &.is-white polygon {
+    fill: #eaeaf6;
+    stroke: #7878b8;
+  }
+
+  &.void polygon {
+    fill: #100608;
+    stroke: #ff5533;
+    stroke-width: 2.5;
+  }
+
+  &.scoring polygon {
+    stroke: #ffd700 !important;
+    stroke-width: 2.5 !important;
+  }
+}
+
+// ─── Game-over result bar ─────────────────────────────────────────────────────
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 28px;
+  background: #111328;
+  border: 1px solid #32356a;
+  border-radius: 10px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+.result-verdict {
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffd700;
+  white-space: nowrap;
+}
+
+.result-scores {
+  font-size: 0.95rem;
+  color: #606898;
+  letter-spacing: 0.06em;
+
+  strong {
+    color: #c0c8e8;
+    font-size: 1.05rem;
+  }
+}
+
+.btn-new {
+  all: unset;
+  cursor: pointer;
+  display: inline-block;
+  padding: 12px 34px;
+  background: #22255a;
+  border: 1px solid #4848a0;
+  border-radius: 8px;
+  color: #d8d8ff;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+
+  &:hover {
+    background: #2e3278;
+    border-color: #ffd700;
+    transform: translateY(-2px);
+  }
+
+  &:active { transform: none; }
+}
+
+// ─── Bottom action buttons ────────────────────────────────────────────────────
+
+.bottom-actions {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  all: unset;
+  cursor: pointer;
+  padding: 10px 22px;
+  background: #22255a;
+  border: 1px solid #4848a0;
+  border-radius: 8px;
+  color: #d8d8ff;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: #2e3278;
+    border-color: #ffd700;
+  }
+
+  &[disabled] {
+    opacity: 0.28;
+    pointer-events: none;
+  }
+
+  &.active {
+    background: #2e3278;
+    border-color: #ffd700;
+    color: #ffd700;
+  }
+}
+
+// ─── Notation popup ───────────────────────────────────────────────────────────
+
+.notation-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 40px;
+  z-index: 100;
+}
+
+.notation-popup {
+  background: #111328;
+  border: 1px solid #32356a;
+  border-radius: 12px;
+  padding: 24px 28px;
+  max-width: 480px;
+  width: 90%;
+}
+
+.notation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.notation-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #606898;
+}
+
+.notation-close {
+  all: unset;
+  cursor: pointer;
+  color: #606898;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 4px 6px;
+
+  &:hover { color: #c0c8e8; }
+}
+
+.notation-footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.btn-copy {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 18px;
+  background: #22255a;
+  border: 1px solid #4848a0;
+  border-radius: 6px;
+  color: #d8d8ff;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: #2e3278;
+    border-color: #ffd700;
+  }
+}
+
+.notation-copied {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: #464870;
+
+  &.ok { color: #52b452; }
+}
+
+.rules-list {
+  margin: 0;
+  padding: 0 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    font-size: 0.92rem;
+    color: #c0c8e8;
+    line-height: 1.6;
+  }
+}
+
+.notation-text {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  color: #c0c8e8;
+  line-height: 1.9;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
